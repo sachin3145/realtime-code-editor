@@ -1,0 +1,96 @@
+.homePageWrapper{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E5E5E5;
+}
+
+.formWrapper{
+    background: #14213D;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+}
+
+.homePageLogo{
+    display: flex;
+}
+
+.homePageLogo h1{
+    margin: 0;
+    margin-left: 10px;
+}
+
+.mainLabel {
+    margin-bottom: 10px;
+}
+
+.inputGroup{
+    display: flex;
+    flex-direction: column;
+}
+
+.inputBox{
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    margin-bottom: 14px;
+    background: #E5E5E5;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+.btn {
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.joinBtn{
+    background: #FFB703;
+    width: 100px;
+    margin-left: auto;
+}
+.joinBtn:hover{
+    background-color: #ffb803e0;
+}
+
+.createInfo{
+    /* margin: 0 auto; */
+    margin-top: 20px;
+}
+
+.createNewBtn{
+    color: #FFB703;
+    text-decoration: none;
+    border-bottom: 1px solid #FFB703;
+    transition: all 0.3s ease-in-out;
+}
+.createNewBtn:hover{
+    color: #ffb803e0;
+    border-bottom: 1px solid #ffb803e0;
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+}
+
+footer a{
+    color: #FFB703;
+    text-decoration: none;
+    border-bottom: 1px solid #FFB703;
+    transition: all 0.3s ease-in-out;
+}
+
+footer a:hover {
+    color: #ffb803e0;
+    border-bottom: 1px solid #ffb803e0;
+}
