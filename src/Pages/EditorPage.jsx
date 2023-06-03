@@ -10,7 +10,7 @@ const ACTIONS = require('../Actions');
 function EditorPage() {
   const socketRef = useRef(null);
   const codeRef = useRef(null);
-  const languageRef = useRef(null);
+  const languageRef = useRef('JavaScript');
   const location = useLocation();
   const reactNavigator = useNavigate();
   const { roomId } = useParams();
