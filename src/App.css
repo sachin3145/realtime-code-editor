@@ -14,11 +14,11 @@
     max-width: 90%;
 }
 
-.homePageLogo{
+.homePageLogo, .editorPageLogo{
     display: flex;
 }
 
-.homePageLogo h1{
+.homePageLogo h1, .editorPageLogo h1{
     margin: 0;
     margin-left: 10px;
 }
@@ -45,6 +45,7 @@
 
 
 .btn {
+    font-weight: bold;
     border: none;
     padding: 10px;
     border-radius: 5px;
@@ -58,8 +59,8 @@
     width: 100px;
     margin-left: auto;
 }
-.joinBtn:hover{
-    background-color: #ffb803e0;
+.joinBtn:hover, .leaveBtn:hover{
+    background: #ffb803e0;
 }
 
 .createInfo{
@@ -93,4 +94,68 @@ footer a{
 footer a:hover {
     color: #ffb803e0;
     border-bottom: 1px solid #ffb803e0;
+}
+
+.mainWrap{
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    height: 100vh;
+}
+
+.aside{
+    background: #0F192E;
+    padding: 16px;
+    color: #E5E5E5;
+    display: flex;
+    flex-direction: column;
+}
+.asideInner{
+    flex: 1;
+}
+
+.clientList{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.client{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+}
+
+.userName{
+    margin-top: 10px;
+}
+
+.editorPageLogo{
+    font-size: 80%;
+    border-bottom: 3px solid #14213D;
+    padding-bottom: 10px;
+}
+
+.leaveBtn{
+    margin-top: 20px;
+    background-color: #FFB703;
+    width: 100%;
+}
+
+.copyBtn{
+    margin-top: 20px;
+}
+
+.editorWrap{
+    background: #E5E5E5;
+}
+
+.CodeMirror{
+    /* height: calc(100vh - 20px); */
+    font-size: 20px;
+    line-height: 1.6;
+    /* padding-top: 20px; */
+    height: 100vh;
 }
