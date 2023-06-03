@@ -46,9 +46,18 @@ io.on('connection', socket => {
         });
     })
 
-    socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
-      io.to(socketId).emit(ACTIONS.CODE_CHANGE, {
+    socket.on(ACTIONS.LANGUAGE_CHANGE, ({ roomId, language }) => {
+      socket.in(roomId).emit(ACTIONS.LANGUAGE_CHANGE, {
+        language,
+      });
+    });
+
+    socket.on(ACTIONS.SYNC_CODE, ({ socketId, code, language }) => {
+        io.to(socketId).emit(ACTIONS.CODE_CHANGE, {
         code
+      });
+      io.to(socketId).emit(ACTIONS.LANGUAGE_CHANGE, {
+          language,
       });
     });
 

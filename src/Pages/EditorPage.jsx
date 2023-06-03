@@ -10,6 +10,7 @@ const ACTIONS = require('../Actions');
 function EditorPage() {
   const socketRef = useRef(null);
   const codeRef = useRef(null);
+  const languageRef = useRef(null);
   const location = useLocation();
   const reactNavigator = useNavigate();
   const { roomId } = useParams();
@@ -36,7 +37,7 @@ function EditorPage() {
           toast.success(`${userName} joined the room`);
         }
         setClients(clients);
-        socketRef.current.emit(ACTIONS.SYNC_CODE, {code: codeRef.current, socketId});
+        socketRef.current.emit(ACTIONS.SYNC_CODE, {code: codeRef.current, language: languageRef.current, socketId});
       });
 
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, userName }) => {
@@ -89,7 +90,7 @@ function EditorPage() {
               <button className="btn copyBtn" onClick={copyRoomId}>Copy Room Id</button>
               <button className="btn leaveBtn" onClick={leaveRoom}>Leave Room</button>
       </div>
-      <div className="editorWrap"><Editor socketRef={socketRef} roomId={roomId} onCodeChange={ code => {codeRef.current = code} } /></div>
+      <div className="editorWrap"><Editor socketRef={socketRef} roomId={roomId} onCodeChange={code => { codeRef.current = code }} onLanguageChange={lang=>{languageRef.current=lang}} /></div>
     </div>
   );
 }
