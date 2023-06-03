@@ -64,7 +64,6 @@
 }
 
 .createInfo{
-    /* margin: 0 auto; */
     margin-top: 20px;
 }
 
@@ -115,23 +114,19 @@ footer a:hover {
 
 .clientList{
     display: flex;
-    align-items: center;
-    padding: 0px 20px;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-direction: column;
+    padding-top: 20px;
+    gap: 10px;
 }
 
 .client{
-    display: flex;
-    flex-direction: column;
     align-items: center;
+    display: flex;
+    flex-wrap: wrap;
     font-weight: bold;
+    font-size: 20px;
 }
 
-.userName{
-    margin-top: 10px;
-}
 
 .editorPageLogo{
     font-size: 80%;
@@ -154,9 +149,7 @@ footer a:hover {
 }
 
 .CodeMirror{
-    /* height: calc(100vh - 20px); */
     font-size: 20px;
     line-height: 1.6;
-    /* padding-top: 20px; */
     height: 100vh;
 }

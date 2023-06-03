@@ -80,7 +80,6 @@ function EditorPage() {
             <img width="40" height="40" src="/icon.png" alt="logo" />
             <h1>InLoop</h1>
           </div>
-          <h3>Connected</h3>
           <div className="clientList">
                       {clients.map((client) => (
                           <Client key={client.socketId} userName={client.userName} />

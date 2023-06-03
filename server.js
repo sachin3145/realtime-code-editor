@@ -4,10 +4,17 @@ const ACTIONS = require('./src/Actions');
 const { Server } = require('socket.io');
 const { rmSync } = require('fs');
 const { Socket } = require('socket.io-client');
+const path = require('path');
 
 const app = Express();
 const server = http.createServer(app);
 const io = new Server(server);
+
+app.use(Express.static('build'));
+app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html')); 
+});
+
 
 const userSocketMap = {};
 
@@ -21,7 +28,6 @@ function getAllConnectedClients(roomId) {
 }
 
 io.on('connection', socket => {
-    console.log("socket connected " + socket.id);
     socket.on(ACTIONS.JOIN, ({roomId, userName}) => {
         userSocketMap[socket.id] = userName;
         socket.join(roomId);
@@ -60,6 +66,4 @@ io.on('connection', socket => {
 })
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-    console.log("Listening on port " + PORT);
-})
+server.listen(PORT);
