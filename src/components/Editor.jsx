@@ -62,6 +62,9 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
       socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
         if (code !== null) {
           editorRef.current.setValue(code);
+          editorRef.current.focus();
+          editorRef.current.setCursor(editorRef.current.lineCount(), 0);
+          
         }
       });
       socketRef.current.on(ACTIONS.LANGUAGE_CHANGE, ({ language }) => {
