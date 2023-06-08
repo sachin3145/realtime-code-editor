@@ -102,6 +102,8 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           <option value="C/C++">C/C++</option>
           <option value="Python">Python</option>
         </select>
+        
+        <button id="run">RUN</button>
       </div>
       <div id="editorPanes">
         <textarea id="realtimeEditor"></textarea>
