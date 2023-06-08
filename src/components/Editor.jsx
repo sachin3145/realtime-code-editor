@@ -11,6 +11,8 @@ const ACTIONS = require("../Actions");
 
 function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
   const editorRef = useRef(null);
+  const inputRef = useRef(null);
+  const outputRef = useRef(null);
 
   function changeLanguage(event) {
     const lang = event.target.value;
@@ -53,6 +55,9 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           });
         }
       });
+      inputRef.current = document.getElementById("editorInput");
+      outputRef.current = document.getElementById("editorOutput");
+      outputRef.current.readOnly = true;
     }
     init();
   }, []);
@@ -98,9 +103,16 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           <option value="Python">Python</option>
         </select>
       </div>
-      <textarea id="realtimeEditor"></textarea>
-      {/* <textarea id="editorInput"></textarea>
-      <textarea id="editorOutput"></textarea> */}
+      <div id="editorPanes">
+        <textarea id="realtimeEditor"></textarea>
+        <div id="sep"></div>
+        <div id="io">
+          <label>Input</label>
+          <textarea id="editorInput" placeholder="Enter Input"></textarea>
+          <label>Output</label>
+          <textarea id="editorOutput" placeholder="Output Appears Here"></textarea>
+        </div>
+      </div>
     </div>
   );
 }
