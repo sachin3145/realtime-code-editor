@@ -3,6 +3,7 @@ const ACTIONS = {
     JOINED: 'joined',
     DISCONNECTED: 'disconnected',
     CODE_CHANGE: "code-change",
+    INPUT_CHANGE: "input-change",
     SYNC_CODE: "sync-code",
     LANGUAGE_CHANGE: "language-change",
     LEAVE: "leave"

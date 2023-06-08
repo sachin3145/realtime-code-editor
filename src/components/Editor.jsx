@@ -7,6 +7,7 @@ import "codemirror/mode/python/python";
 import "codemirror/theme/monokai.css";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
+import { validate } from "uuid";
 const ACTIONS = require("../Actions");
 
 function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
@@ -56,6 +57,12 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
         }
       });
       inputRef.current = document.getElementById("editorInput");
+      
+      inputRef.current.addEventListener("input", event => {
+        const inputText = inputRef.current.value;
+        socketRef.current.emit(ACTIONS.INPUT_CHANGE, { roomId, inputText });
+      });
+      
       outputRef.current = document.getElementById("editorOutput");
       outputRef.current.readOnly = true;
     }
@@ -69,7 +76,7 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           editorRef.current.setValue(code);
           editorRef.current.focus();
           editorRef.current.setCursor(editorRef.current.lineCount(), 0);
-          
+
         }
       });
       socketRef.current.on(ACTIONS.LANGUAGE_CHANGE, ({ language }) => {
@@ -82,6 +89,11 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           editorRef.current.setOption("mode", "text/x-python");
         } else if (language === "C/C++") {
           editorRef.current.setOption("mode", "text/x-c++src");
+        }
+      });
+      socketRef.current.on(ACTIONS.INPUT_CHANGE, ({ inputText }) => {
+        if (inputText !== null) {
+          inputRef.current.value = inputText;
         }
       });
     }

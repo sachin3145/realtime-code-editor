@@ -46,6 +46,12 @@ io.on('connection', socket => {
         });
     })
 
+    socket.on(ACTIONS.INPUT_CHANGE, ({ roomId, inputText }) => {
+      socket.in(roomId).emit(ACTIONS.INPUT_CHANGE, {
+        inputText,
+      });
+    });
+
     socket.on(ACTIONS.LANGUAGE_CHANGE, ({ roomId, language }) => {
       socket.in(roomId).emit(ACTIONS.LANGUAGE_CHANGE, {
         language,
