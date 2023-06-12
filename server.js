@@ -52,6 +52,16 @@ io.on('connection', socket => {
       });
     });
 
+    socket.on(ACTIONS.RUN_CODE, ({ roomId, language, code, input }) => {
+        let outputText = 'hello world';
+        const clients = getAllConnectedClients(roomId);
+        clients.forEach(({ socketId }) => {
+          io.to(socketId).emit(ACTIONS.OUTPUT_CHANGE, {
+            outputText,
+          });
+        });
+    });
+
     socket.on(ACTIONS.LANGUAGE_CHANGE, ({ roomId, language }) => {
       socket.in(roomId).emit(ACTIONS.LANGUAGE_CHANGE, {
         language,

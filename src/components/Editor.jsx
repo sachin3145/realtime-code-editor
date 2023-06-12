@@ -34,12 +34,12 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange, languageRef
   }
 
   function runCode() {
-    const obj = {
+    socketRef.current.emit(ACTIONS.RUN_CODE, {
       language: languageRef.current,
       code: editorRef.current.getValue(),
-      input: inputRef.current.value
-    };
-    console.log(obj);
+      input: inputRef.current.value,
+      roomId: roomId,
+    });
   }
 
   useEffect(() => {
@@ -106,11 +106,18 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange, languageRef
           inputRef.current.value = inputText;
         }
       });
+      socketRef.current.on(ACTIONS.OUTPUT_CHANGE, ({ outputText }) => {
+        outputRef.current.value = 'yes';
+        if (outputText !== null) {
+          outputRef.current.value = outputText;
+        }
+      });
     }
     return () => {
       socketRef.current.off(ACTIONS.CODE_CHANGE);
       socketRef.current.off(ACTIONS.LANGUAGE_CHANGE);
       socketRef.current.off(ACTIONS.INPUT_CHANGE);
+      socketRef.current.off(ACTIONS.OUTPUT_CHANGE);
     };
   }, [socketRef.current]);
 
