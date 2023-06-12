@@ -9,8 +9,10 @@ import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 const ACTIONS = require("../Actions");
 
-function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
+function Editor({ socketRef, roomId, onCodeChange, onLanguageChange, languageRef }) {
   const editorRef = useRef(null);
+  const inputRef = useRef(null);
+  const outputRef = useRef(null);
 
   function changeLanguage(event) {
     const lang = event.target.value;
@@ -28,6 +30,17 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
     roomId,
     language: lang,
   });
+    
+  }
+
+  function runCode() {
+    outputRef.current.value = "Running...";
+    socketRef.current.emit(ACTIONS.RUN_CODE, {
+      language: languageRef.current,
+      code: editorRef.current.getValue(),
+      input: inputRef.current.value,
+      roomId: roomId,
+    });
   }
 
   useEffect(() => {
@@ -53,6 +66,15 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           });
         }
       });
+      inputRef.current = document.getElementById("editorInput");
+      
+      inputRef.current.addEventListener("input", event => {
+        const inputText = inputRef.current.value;
+        socketRef.current.emit(ACTIONS.INPUT_CHANGE, { roomId, inputText });
+      });
+      
+      outputRef.current = document.getElementById("editorOutput");
+      outputRef.current.readOnly = true;
     }
     init();
   }, []);
@@ -64,13 +86,13 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           editorRef.current.setValue(code);
           editorRef.current.focus();
           editorRef.current.setCursor(editorRef.current.lineCount(), 0);
-          
         }
       });
+      
       socketRef.current.on(ACTIONS.LANGUAGE_CHANGE, ({ language }) => {
+        onLanguageChange(language);
         const element = document.getElementById("curLanguage");
         element.value = language;
-        onLanguageChange(language);
         if (language === "JavaScript") {
           editorRef.current.setOption("mode", "javascript");
         } else if (language === "Python") {
@@ -79,9 +101,23 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           editorRef.current.setOption("mode", "text/x-c++src");
         }
       });
+
+      socketRef.current.on(ACTIONS.INPUT_CHANGE, ({ inputText }) => {
+        if (inputText !== null) {
+          inputRef.current.value = inputText;
+        }
+      });
+      socketRef.current.on(ACTIONS.OUTPUT_CHANGE, ({ data }) => {;
+        if (data !== null) {
+            outputRef.current.value = data["stdout"]+ '\n' + data['error'] + '\n' + data['stderr'];
+        }
+      });
     }
     return () => {
       socketRef.current.off(ACTIONS.CODE_CHANGE);
+      socketRef.current.off(ACTIONS.LANGUAGE_CHANGE);
+      socketRef.current.off(ACTIONS.INPUT_CHANGE);
+      socketRef.current.off(ACTIONS.OUTPUT_CHANGE);
     };
   }, [socketRef.current]);
 
@@ -97,10 +133,19 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           <option value="C/C++">C/C++</option>
           <option value="Python">Python</option>
         </select>
+        
+        <button id="run" onClick={runCode}>RUN</button>
       </div>
-      <textarea id="realtimeEditor"></textarea>
-      {/* <textarea id="editorInput"></textarea>
-      <textarea id="editorOutput"></textarea> */}
+      <div id="editorPanes">
+        <textarea id="realtimeEditor"></textarea>
+        <div id="sep"></div>
+        <div id="io">
+          <label>Input</label>
+          <textarea id="editorInput" placeholder="Enter Input"></textarea>
+          <label>Output</label>
+          <textarea id="editorOutput" placeholder="Output Appears Here"></textarea>
+        </div>
+      </div>
     </div>
   );
 }

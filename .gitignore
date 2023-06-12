@@ -4,3 +4,4 @@
 # environment variables
 .env.development
 .env.production
+.env

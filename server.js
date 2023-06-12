@@ -5,7 +5,7 @@ const { Server } = require('socket.io');
 const { rmSync } = require('fs');
 const { Socket } = require('socket.io-client');
 const path = require('path');
-
+const codeRunner = require("./codeRunner");
 const app = Express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -46,18 +46,39 @@ io.on('connection', socket => {
         });
     })
 
+    socket.on(ACTIONS.INPUT_CHANGE, ({ roomId, inputText }) => {
+      socket.in(roomId).emit(ACTIONS.INPUT_CHANGE, {
+        inputText,
+      });
+    });
+
+    socket.on(ACTIONS.RUN_CODE, ({ roomId, language, code, input }) => {
+        codeRunner(language, code, input).then(data => {
+          // {"stdout":"1\n","error":"","stderr":""}
+          const clients = getAllConnectedClients(roomId);
+          clients.forEach(({ socketId }) => {
+            io.to(socketId).emit(ACTIONS.OUTPUT_CHANGE, {
+              data,
+            });
+          });
+        });
+    });
+
     socket.on(ACTIONS.LANGUAGE_CHANGE, ({ roomId, language }) => {
       socket.in(roomId).emit(ACTIONS.LANGUAGE_CHANGE, {
         language,
       });
     });
 
-    socket.on(ACTIONS.SYNC_CODE, ({ socketId, code, language }) => {
+    socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
         io.to(socketId).emit(ACTIONS.CODE_CHANGE, {
         code
       });
+    });
+
+    socket.on(ACTIONS.SYNC_LANGUAGE, ({ socketId, language }) => {
       io.to(socketId).emit(ACTIONS.LANGUAGE_CHANGE, {
-          language,
+        language,
       });
     });
 
