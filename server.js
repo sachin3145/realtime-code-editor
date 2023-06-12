@@ -5,7 +5,7 @@ const { Server } = require('socket.io');
 const { rmSync } = require('fs');
 const { Socket } = require('socket.io-client');
 const path = require('path');
-
+const codeRunner = require("./codeRunner");
 const app = Express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -53,11 +53,13 @@ io.on('connection', socket => {
     });
 
     socket.on(ACTIONS.RUN_CODE, ({ roomId, language, code, input }) => {
-        let outputText = 'hello world';
-        const clients = getAllConnectedClients(roomId);
-        clients.forEach(({ socketId }) => {
-          io.to(socketId).emit(ACTIONS.OUTPUT_CHANGE, {
-            outputText,
+        codeRunner(language, code, input).then(data => {
+          // {"stdout":"1\n","error":"","stderr":""}
+          const clients = getAllConnectedClients(roomId);
+          clients.forEach(({ socketId }) => {
+            io.to(socketId).emit(ACTIONS.OUTPUT_CHANGE, {
+              data,
+            });
           });
         });
     });

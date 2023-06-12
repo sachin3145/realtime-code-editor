@@ -34,6 +34,7 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange, languageRef
   }
 
   function runCode() {
+    outputRef.current.value = "Running...";
     socketRef.current.emit(ACTIONS.RUN_CODE, {
       language: languageRef.current,
       code: editorRef.current.getValue(),
@@ -106,10 +107,9 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange, languageRef
           inputRef.current.value = inputText;
         }
       });
-      socketRef.current.on(ACTIONS.OUTPUT_CHANGE, ({ outputText }) => {
-        outputRef.current.value = 'yes';
-        if (outputText !== null) {
-          outputRef.current.value = outputText;
+      socketRef.current.on(ACTIONS.OUTPUT_CHANGE, ({ data }) => {;
+        if (data !== null) {
+            outputRef.current.value = data["stdout"]+ '\n' + data['error'] + '\n' + data['stderr'];
         }
       });
     }
