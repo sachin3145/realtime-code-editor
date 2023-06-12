@@ -7,10 +7,9 @@ import "codemirror/mode/python/python";
 import "codemirror/theme/monokai.css";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
-import { validate } from "uuid";
 const ACTIONS = require("../Actions");
 
-function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
+function Editor({ socketRef, roomId, onCodeChange, onLanguageChange, languageRef }) {
   const editorRef = useRef(null);
   const inputRef = useRef(null);
   const outputRef = useRef(null);
@@ -31,6 +30,16 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
     roomId,
     language: lang,
   });
+    
+  }
+
+  function runCode() {
+    const obj = {
+      language: languageRef.current,
+      code: editorRef.current.getValue(),
+      input: inputRef.current.value
+    };
+    console.log(obj);
   }
 
   useEffect(() => {
@@ -76,13 +85,13 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           editorRef.current.setValue(code);
           editorRef.current.focus();
           editorRef.current.setCursor(editorRef.current.lineCount(), 0);
-
         }
       });
+      
       socketRef.current.on(ACTIONS.LANGUAGE_CHANGE, ({ language }) => {
+        onLanguageChange(language);
         const element = document.getElementById("curLanguage");
         element.value = language;
-        onLanguageChange(language);
         if (language === "JavaScript") {
           editorRef.current.setOption("mode", "javascript");
         } else if (language === "Python") {
@@ -91,6 +100,7 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           editorRef.current.setOption("mode", "text/x-c++src");
         }
       });
+
       socketRef.current.on(ACTIONS.INPUT_CHANGE, ({ inputText }) => {
         if (inputText !== null) {
           inputRef.current.value = inputText;
@@ -99,6 +109,8 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
     }
     return () => {
       socketRef.current.off(ACTIONS.CODE_CHANGE);
+      socketRef.current.off(ACTIONS.LANGUAGE_CHANGE);
+      socketRef.current.off(ACTIONS.INPUT_CHANGE);
     };
   }, [socketRef.current]);
 
@@ -115,7 +127,7 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange }) {
           <option value="Python">Python</option>
         </select>
         
-        <button id="run">RUN</button>
+        <button id="run" onClick={runCode}>RUN</button>
       </div>
       <div id="editorPanes">
         <textarea id="realtimeEditor"></textarea>

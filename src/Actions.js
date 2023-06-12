@@ -5,6 +5,7 @@ const ACTIONS = {
     CODE_CHANGE: "code-change",
     INPUT_CHANGE: "input-change",
     SYNC_CODE: "sync-code",
+    SYNC_LANGUAGE: "sync-language",
     LANGUAGE_CHANGE: "language-change",
     LEAVE: "leave"
 }

@@ -37,9 +37,13 @@ function EditorPage() {
           toast.success(`${userName} joined the room`);
         }
         setClients(clients);
-        socketRef.current.emit(ACTIONS.SYNC_CODE, {code: codeRef.current, language: languageRef.current, socketId});
+        socketRef.current.emit(ACTIONS.SYNC_CODE, { code: codeRef.current,  socketId });
+        socketRef.current.emit(ACTIONS.SYNC_LANGUAGE, {
+          language: languageRef.current,
+          socketId,
+        });
       });
-
+      
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, userName }) => {
         toast.success(`${userName} left the room`);
         setClients((prev) => {
@@ -90,7 +94,7 @@ function EditorPage() {
               <button className="btn copyBtn" onClick={copyRoomId}>Copy Room Id</button>
               <button className="btn leaveBtn" onClick={leaveRoom}>Leave Room</button>
       </div>
-      <div className="editorWrap"><Editor socketRef={socketRef} roomId={roomId} onCodeChange={code => { codeRef.current = code }} onLanguageChange={lang=>{languageRef.current=lang}} /></div>
+      <div className="editorWrap"><Editor socketRef={socketRef} roomId={roomId} onCodeChange={code => { codeRef.current = code }} onLanguageChange={lang=>{languageRef.current=lang}} languageRef={languageRef} /></div>
     </div>
   );
 }
