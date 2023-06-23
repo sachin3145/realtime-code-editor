@@ -34,6 +34,10 @@ function Editor({ socketRef, roomId, onCodeChange, onLanguageChange, languageRef
   }
 
   function runCode() {
+    if (editorRef.current.getValue() === "") {
+      alert("Please enter some valid code!");
+      return;
+    }
     outputRef.current.value = "Running...";
     socketRef.current.emit(ACTIONS.RUN_CODE, {
       language: languageRef.current,

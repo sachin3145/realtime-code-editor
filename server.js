@@ -52,7 +52,7 @@ io.on('connection', socket => {
       });
     });
 
-    socket.on(ACTIONS.RUN_CODE, ({ roomId, language, code, input }) => {
+  socket.on(ACTIONS.RUN_CODE, ({ roomId, language, code, input }) => {
         codeRunner(language, code, input).then(data => {
           // {"stdout":"1\n","error":"","stderr":""}
           const clients = getAllConnectedClients(roomId);
